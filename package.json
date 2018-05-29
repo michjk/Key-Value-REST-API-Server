@@ -1,0 +1,21 @@
+{
+  "name": "Key-Value-REST-API-Server",
+  "version": "1.0.0",
+  "description": "This is REST API server for retrieving, inserting, and updating key-value based data.",
+  "main": "index.js",
+  "repository": "https://github.com/michjk/Key-Value-REST-API-Server.git",
+  "author": "michjk",
+  "license": "MIT",
+  "dependencies": {
+    "bluebird": "^3.5.1",
+    "express": "^4.16.3",
+    "lodash": "^4.17.10",
+    "mongoose": "^5.1.2"
+  },
+  "devDependencies": {
+    "nodemon": "^1.17.5"
+  },
+  "scripts": {
+    "devserver": "./node_modules/nodemon/bin/nodemon.js index.js"
+  }
+}
