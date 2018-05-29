@@ -16,6 +16,12 @@
     "nodemon": "^1.17.5"
   },
   "scripts": {
+    "start": "node index.js",
     "devserver": "./node_modules/nodemon/bin/nodemon.js index.js"
+  },
+  "engines": {
+    "node": "8.x",
+    "npm": "5.x",
+    "yarn": "1.x"
   }
 }
