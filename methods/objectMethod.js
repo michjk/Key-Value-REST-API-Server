@@ -4,7 +4,8 @@ const _ = require('lodash');
 const getObject = async(req, res, next) => {
     
     let timestamp = _.has(req.query, 'timestamp') ? req.query.timestamp : null;
-
+    console.log(req.query);
+    
     if ( _.has(req.query, 'timestamp')) {
         if (!timestamp || isNaN(timestamp))
             return next(new Error('Incorrect timestamp value!'))
@@ -15,7 +16,7 @@ const getObject = async(req, res, next) => {
         if (timestamp)
             queryDict['timestamp'] = {'$lte': Number(timestamp)};
         
-            const objectResult = await ObjectModel
+        const objectResult = await ObjectModel
             .findOne(queryDict)
             .sort({ 
                 timestamp: -1 
@@ -42,7 +43,11 @@ const addObject = async(req, res, next) => {
     if (!value) {
         return next(new Error(`Value of ${key} must be not empty!`));
     }
-    
+
+    if (typeof value !== 'string') {
+        return next(new Error(`Value of ${key} must be a string!`));
+    }
+
     try {
         const newObject = await ObjectModel.create({ key, value });
         const timestamp = newObject.timestamp;
