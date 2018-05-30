@@ -14,6 +14,12 @@ const getObject = async(req, res, next) => {
         return next(new Error('Incorrect timestamp value!'))
     }
 
+    console.log(timestamp);
+    console.log(typeof timestamp);
+    console.log(Number(timestamp));
+    console.log(isNaN(timestamp));
+    console.log(!timestamp);
+
     try {
         const queryDict = {'key': req.params.key};
         if (timestamp)
