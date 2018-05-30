@@ -6,7 +6,7 @@ const promise = require('bluebird');
 
 const objectRouter = require('./routers/objectRouter');
 
-mongoose.connect(process.env.MONGODB_URL);
+mongoose.connect(process.env.MONGODB_URI);
 mongoose.Promise = promise;
 mongoose.connection.on('error', err => console.error(err.message));
 
