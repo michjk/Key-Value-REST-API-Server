@@ -28,6 +28,7 @@ const getObject = async(req, res, next) => {
 }
 
 const addObject = async(req, res, next) => {
+    console.log(req.body);
     if (!req.body) {
         return next(new Error("Data empty!"));
     }
