@@ -6,6 +6,7 @@ const getObject = async(req, res, next) => {
     let timestamp = _.has(req.query, 'timestamp') ? req.query.timestamp : null;
 
     if ( _.has(req.query, 'timestamp') && (!timestamp || isNaN(timestamp))) {
+        console(timestamp)
         console.log(isNaN(timestamp));
         console.log(!timestamp);
         return next(new Error('Incorrect timestamp value!'))
