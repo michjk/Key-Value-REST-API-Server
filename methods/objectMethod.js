@@ -5,20 +5,10 @@ const getObject = async(req, res, next) => {
     
     let timestamp = _.has(req.query, 'timestamp') ? req.query.timestamp : null;
 
-    if ( _.has(req.query, 'timestamp') && (!timestamp || isNaN(timestamp))) {
-        console.log(timestamp);
-        console.log(typeof timestamp);
-        console.log(Number(timestamp));
-        console.log(isNaN(timestamp));
-        console.log(!timestamp);
-        return next(new Error('Incorrect timestamp value!'))
+    if ( _.has(req.query, 'timestamp')) {
+        if (!timestamp || isNaN(timestamp))
+            return next(new Error('Incorrect timestamp value!'))
     }
-
-    console.log(timestamp);
-    console.log(typeof timestamp);
-    console.log(Number(timestamp));
-    console.log(isNaN(timestamp));
-    console.log(!timestamp);
 
     try {
         const queryDict = {'key': req.params.key};
@@ -30,7 +20,6 @@ const getObject = async(req, res, next) => {
             .sort({ 
                 timestamp: -1 
             });
-        console.log(objectResult);
         const value = objectResult.value;
         res.json({ value });
     } catch (err) {
@@ -40,25 +29,31 @@ const getObject = async(req, res, next) => {
 
 const addObject = async(req, res, next) => {
     console.log(req.body);
-    if (!req.body) {
+    if (!req.body || Object.keys(req.body).length == 0) {
         return next(new Error("Data empty!"));
     }
-    console.log(req.body);
-    for (let key in req.body) {
-        console.log(key);
-        let value = req.body[key];
-        if (typeof value !== 'string') {
-            return next(new Error(`Value of ${key} must be a string`));
-        }
 
-        try {
-            const newObject = await ObjectModel.create({ key, value });
-            const timestamp = newObject.timestamp;
-            
-            res.status(200).json({ key, value, 'timestamp': timestamp.getTime() });
-        } catch (err) {
-            next(err);
-        }
+    if (Object.keys(req.body).length > 1) {
+        return next(new Error("Data must contains only one key-value pair!"));
+    }
+
+    const [key, value] = Object.entries(req.body)[0];
+
+    if (!value) {
+        return next(new Error(`Value of ${key} must be not empty!`));
+    }
+
+    if (typeof value !== 'string') {
+        return next(new Error(`Value of ${key} must be a string!`));
+    }
+
+    try {
+        const newObject = await ObjectModel.create({ key, value });
+        const timestamp = newObject.timestamp;
+        
+        res.status(200).json({ key, value, 'timestamp': timestamp.getTime() });
+    } catch (err) {
+        next(err);
     }
 }
 
