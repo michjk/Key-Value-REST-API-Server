@@ -4,7 +4,6 @@ const _ = require('lodash');
 const getObject = async(req, res, next) => {
     
     let timestamp = _.has(req.query, 'timestamp') ? req.query.timestamp : null;
-    console.log(req.query);
     
     if ( _.has(req.query, 'timestamp')) {
         if (!timestamp || isNaN(timestamp))
@@ -38,7 +37,8 @@ const addObject = async(req, res, next) => {
         return next(new Error("Data must contains only one key-value pair!"));
     }
 
-    const [key, value] = Object.entries(req.body)[0];
+    const key = Object.keys(req.body)[0];
+    const value = req.body[key];
 
     if (!value) {
         return next(new Error(`Value of ${key} must be not empty!`));
