@@ -15,8 +15,8 @@ const port = process.env.PORT || 5656;
 
 app.use(bodyParser.json());
 app.use('/object', objectRouter);
-app.use((err, req, res) => {
-    res.status(404).json({ error: err.message });
+app.use((req, res, next) => {
+    res.sendStatus(404);
 });
 
 app.listen(port, () => {
