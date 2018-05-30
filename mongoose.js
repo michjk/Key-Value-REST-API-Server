@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const promise = require('bluebird');
 
-mongoose.connect(process.env.MONGODB_URI);
 mongoose.Promise = promise;
 
 mongoose.connection.on('error', err => {
@@ -10,8 +9,11 @@ mongoose.connection.on('error', err => {
 mongoose.connection.on("connected", () => {
     console.log("Connected to mongodb");
 });
-mongoose.connection.on("reconnected", function() {
+mongoose.connection.on("reconnected", () => {
     console.log("Reconnected to mongodb");
 });
+mongoose.connection.on("disconnected", () => {
+    console.log("Disconnected to mongodb");
+});
 
-module.export = mongoose;
+module.exports = mongoose;

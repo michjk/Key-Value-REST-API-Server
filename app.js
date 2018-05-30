@@ -11,11 +11,5 @@ app.use((err, req, res, next) => {
     res.status(404).json({'error': err.message});
 });
 
-const port = process.env.PORT || 5656;
-
-app.listen(port, () => {
-    console.log(`Listening at ${port}`);
-});
-
-module.export = app;
+module.exports = app;
 
