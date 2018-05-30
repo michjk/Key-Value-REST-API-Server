@@ -32,9 +32,9 @@ const addObject = async(req, res, next) => {
     if (!req.body) {
         return next(new Error("Data empty!"));
     }
-
+    console.log(req.body);
     for (let key in req.body) {
-
+        console.log(key);
         let value = req.body[key];
         if (typeof value !== 'string') {
             return next(new Error(`Value of ${key} must be a string`));
