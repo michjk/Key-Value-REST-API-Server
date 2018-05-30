@@ -42,11 +42,7 @@ const addObject = async(req, res, next) => {
     if (!value) {
         return next(new Error(`Value of ${key} must be not empty!`));
     }
-
-    if (typeof value !== 'string') {
-        return next(new Error(`Value of ${key} must be a string!`));
-    }
-
+    
     try {
         const newObject = await ObjectModel.create({ key, value });
         const timestamp = newObject.timestamp;
