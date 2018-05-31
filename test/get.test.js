@@ -27,22 +27,22 @@ describe('Route GET /object/:key', () => {
   test('GET request accept a key and return the latest value', async() => {
     const response = await request(app).get('/object/key');
     expect(response.status).toBe(200);
-    expect(response.body.value).toBe(objectList[3].key);
+    expect(response.body.value).toBe(objectList[3].value);
   });
   test('GET request accept a key2 and return the latest value', async() => {
     const response = await request(app).get('/object/key2');
     expect(response.status).toBe(200);
-    expect(response.body.value).toBe(objectList[4].key);
+    expect(response.body.value).toBe(objectList[4].value);
   });
   test('GET request accept a key & timestamp and return the third value', async() => {
     const response = await request(app).get(`/object/key?timestamp=${objectList[2].timestamp.getTime()}`);
     expect(response.status).toBe(200);
-    expect(response.body.value).toBe(objectList[2].key);
+    expect(response.body.value).toBe(objectList[2].value);
   });
   test('GET request accept a key & timestamp and return the second value', async() => {
     const response = await request(app).get(`/object/key?timestamp=${objectList[2].timestamp.getTime()-1}`);
     expect(response.status).toBe(200);
-    expect(response.body.value).toBe(objectList[1].key);
+    expect(response.body.value).toBe(objectList[1].value);
   });
   test('GET request accept a key & timestamp before first value and return error', async() => {
     const response = await request(app).get('/object/key?timestamp=1000');
