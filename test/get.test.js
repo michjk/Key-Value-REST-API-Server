@@ -28,9 +28,19 @@ describe('GET request host/object/:key', () => {
     expect(response.status).toBe(200);
     expect(response.body.value).toBe('4');
   });
-  test('GET request accept a key and return the third value by using timestamp', async() => {
+  test('GET request accept a key & timestamp and return the third value', async() => {
     const response = await request(app).get(`/object/key?timestamp=${objectList[2].timestamp.getTime()}`);
     expect(response.status).toBe(200);
     expect(response.body.value).toBe('3');
+  });
+  test('GET request accept a key & (third value timestamp-1) and return the second value', async() => {
+    const response = await request(app).get(`/object/key?timestamp=${objectList[2].timestamp.getTime()-1}`);
+    expect(response.status).toBe(200);
+    expect(response.body.value).toBe('2');
+  });
+  test('GET request accept a key & timestamp before first value and return error', async() => {
+    const response = await request(app).get(`/object/key?timestamp=1000`);
+    expect(response.status).toBe(200);
+    expect(response.body.error).toBe("Value of key is not found!");
   });
 });

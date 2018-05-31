@@ -23,7 +23,7 @@ const getObject = async(req, res, next) => {
         const value = objectResult.value;
         res.json({ value });
     } catch (err) {
-        next(err);
+        next(new Error(`Value of ${req.params.key} is not found!`));
     }
 }
 
