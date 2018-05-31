@@ -124,6 +124,14 @@ describe('Route POST /object/ with JSON body', () => {
   });
   test('POST request: empty value should return error', async() => {
     const objectJSON = {key: ''};
-    const response = await postReqAndCheckError(objectJSON, "Body must contain JSON!");
+    const response = await postReqAndCheckError(objectJSON, "Value of key must be not empty!");
+  });
+  test('POST request: non-string value should return error', async() => {
+    const objectJSON = {key: {key2: '2'}};
+    const response = await postReqAndCheckError(objectJSON, "Value of key must be a string!");
+  });
+  test('POST request: only accept one key-value pair', async() => {
+    const objectJSON = {key: 1, key2: 2};
+    const response = await postReqAndCheckError(objectJSON, "Data must contains only one key-value pair!");
   });
 });
