@@ -65,3 +65,25 @@ describe('Route GET /object/:key', () => {
     expect(response.body.error).toBe('Incorrect timestamp value!');
   });
 });
+
+describe('Route POST /object/ with JSON body', () => {
+  beforeEach(async() => {
+    await mongoose.connect(process.env.MONGODB_URI);
+    ObjectModel.remove({});
+  });
+  afterEach(async() => {
+    await mongoose.disconnect();
+  });
+  test('a key-value pair JSON is sent and stored by POST request', async() => {
+    const objectJSON = {key: '1'};
+    const response = await request(app).post('/object/').send(objectJSON);
+    expect(response.status).toBe(200);
+    expect(response.body.key).toBe('key');
+    expect(response.body.value).toBe('1');
+    expect(isNaN(response.body.timestamp)).toBe(false);
+
+    const objectRes = await ObjectModel.find({key: 'key'});
+    expect(objectRes.value).toBe('1');
+    expect(objectRes.timestamp.getTime()).toBe(response.body.timestamp);
+  });
+});
