@@ -52,7 +52,7 @@ describe('Route GET /object/:key', () => {
   test('GET request accept an unknown key and return error', async() => {
     const response = await request(app).get('/object/key3');
     expect(response.status).toBe(404);
-    expect(response.body.error).toBe("Value of key is not found!");
+    expect(response.body.error).toBe("Value of key3 is not found!");
   });
   test('GET request accept a key & empty timestamp format and return error', async() => {
     const response = await request(app).get('/object/key?timestamp=');
