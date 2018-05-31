@@ -67,6 +67,20 @@ describe('Route GET /object/:key', () => {
 });
 
 describe('Route POST /object/ with JSON body', () => {
+  let postReqAndCheck;
+  
+  beforeAll(() => {
+    postReqAndCheck = async(key, value) => {
+      const objectJSON = {key: key};
+      const response = await request(app).post('/object/').send(objectJSON);
+      expect(response.status).toBe(200);
+      expect(response.body.key).toBe(key);
+      expect(response.body.value).toBe(value);
+      expect(isNaN(response.body.timestamp)).toBe(false);
+
+      return response;
+    }
+  })
   beforeEach(async() => {
     await mongoose.connect(process.env.MONGODB_URI);
     await ObjectModel.remove({});
@@ -74,17 +88,20 @@ describe('Route POST /object/ with JSON body', () => {
   afterEach(async() => {
     await mongoose.disconnect();
   });
-  test('a key-value pair JSON is sent and stored by POST request', async() => {
-    const objectJSON = {key: '1'};
-    const response = await request(app).post('/object/').send(objectJSON);
-    expect(response.status).toBe(200);
-    expect(response.body.key).toBe('key');
-    expect(response.body.value).toBe('1');
-    expect(isNaN(response.body.timestamp)).toBe(false);
-
-    const objectRes = await ObjectModel.findOne({key: 'key'});
-    console.log(objectRes);
-    expect(objectRes.value).toBe('1');
+  test('POST request: a key-value pair JSON is sent and stored', async() => {
+    const response = await postReqAndCheck("key", "1");
+    const objectRes = await ObjectModel.findOne({key: "key"});
+    expect(objectRes.value).toBe("1");
     expect(objectRes.timestamp.getTime()).toBe(response.body.timestamp);
+  });
+  test('POST request: 2 key-value pairs JSON are sent and stored by 2 POST request', async() => {
+    const response1 = await postReqAndCheck("key", "1");
+    const response2 = await postReqAndCheck("key", "2");
+    
+    const objectRes = await ObjectModel.find({key: 'key'}).sort({timestamp: -1});
+    expect(objectRes[0].value).toBe('2');
+    expect(objectRes[0].timestamp.getTime()).toBe(response2.body.timestamp);
+    expect(objectRes[1].value).toBe('1');
+    expect(objectRes[1].timestamp.getTime()).toBe(response1.body.timestamp);
   });
 });
