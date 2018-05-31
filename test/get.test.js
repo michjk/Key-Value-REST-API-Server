@@ -4,7 +4,7 @@ const mongoose = require('../mongoose');
 const app = require('../app');
 const ObjectModel = require('../models/object');
 
-describe('GET request host/object/:key', () => {
+describe('Route GET /object/:key', () => {
   let objectList = []
   beforeAll(async()=> {
     await mongoose.connect(process.env.MONGODB_URI);
@@ -40,7 +40,8 @@ describe('GET request host/object/:key', () => {
   });
   test('GET request accept a key & timestamp before first value and return error', async() => {
     const response = await request(app).get(`/object/key?timestamp=1000`);
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(404);
+    console.log(response.body);
     expect(response.body.error).toBe("Value of key is not found!");
   });
 });
