@@ -75,6 +75,7 @@ describe('Route POST /object/ with JSON body', () => {
       console.log(value);
       const objectJSON = {key: key};
       const response = await request(app).post('/object/').send(objectJSON);
+      console.log(response.body);
       expect(response.status).toBe(200);
       expect(response.body.key).toBe(key);
       expect(response.body.value).toBe(value);
