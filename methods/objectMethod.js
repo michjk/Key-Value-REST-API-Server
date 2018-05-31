@@ -2,10 +2,19 @@ const ObjectModel = require('../models/object');
 const _ = require('lodash');
 
 const getObject = async(req, res, next) => {
+    let objectEntries = Object.entries(req.query);
+    if (objectEntries.length > 1) {
+        return next(new Error('Query parameter should not more than 1!'));
+    }
     
-    let timestamp = _.has(req.query, 'timestamp') ? req.query.timestamp : null;
+    if (objectEntries.length == 1 && objectEntries[0][0] !== 'timestamp') {
+        return next(new Error('timestamp should be the only query parameter!'));
+    }
+
+    let timestamp = null;
     
     if ( _.has(req.query, 'timestamp')) {
+        timestamp = req.query.timestamp;
         if (!timestamp || isNaN(timestamp))
             return next(new Error('Incorrect timestamp value!'))
     }
