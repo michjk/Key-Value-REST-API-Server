@@ -82,7 +82,7 @@ describe('Route POST /object/ with JSON body', () => {
     expect(response.body.value).toBe('1');
     expect(isNaN(response.body.timestamp)).toBe(false);
 
-    const objectRes = await ObjectModel.find({key: 'key'});
+    const objectRes = await ObjectModel.findOne({key: 'key'});
     console.log(objectRes);
     expect(objectRes.value).toBe('1');
     expect(objectRes.timestamp.getTime()).toBe(response.body.timestamp);
