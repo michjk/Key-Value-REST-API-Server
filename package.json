@@ -19,7 +19,7 @@
   },
   "scripts": {
     "start": "node server.js",
-    "test": "jest --runInBand",
+    "test": "jest",
     "devserver": "nodemon server.js"
   },
   "engines": {
