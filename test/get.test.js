@@ -71,11 +71,10 @@ describe('Route POST /object/ with JSON body', () => {
   
   beforeAll(() => {
     postReqAndCheck = async(key, value) => {
-      console.log(key);
-      console.log(value);
-      const objectJSON = {key: key, value: value};
+      const objectJSON = {};
+      objectJSON[key]=value;
       const response = await request(app).post('/object/').send(objectJSON);
-      console.log(response.body);
+      
       expect(response.status).toBe(200);
       expect(response.body.key).toBe(key);
       expect(response.body.value).toBe(value);
