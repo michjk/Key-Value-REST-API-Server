@@ -30,7 +30,7 @@ const getObject = async(req, res, next) => {
 const addObject = async(req, res, next) => {
     console.log(req.body);
     if (!req.body || Object.keys(req.body).length == 0) {
-        return next(new Error("Data empty!"));
+        return next(new Error("Body must contain JSON!"));
     }
 
     if (Object.keys(req.body).length > 1) {

@@ -67,12 +67,11 @@ describe('Route GET /object/:key', () => {
 });
 
 describe('Route POST /object/ with JSON body', () => {
-  let postReqAndCheck;
-  
+  let postReqAndCheckCorrect;
+  let postReqAndCheckError;
+
   beforeAll(() => {
-    postReqAndCheck = async(key, value) => {
-      const objectJSON = {};
-      objectJSON[key]=value;
+    postReqAndCheckCorrect = async(objectJSON) => {
       const response = await request(app).post('/object/').send(objectJSON);
       
       expect(response.status).toBe(200);
@@ -80,6 +79,15 @@ describe('Route POST /object/ with JSON body', () => {
       expect(response.body.value).toBe(value);
       expect(isNaN(response.body.timestamp)).toBe(false);
 
+      return response;
+    }
+
+    postReqAndCheckError = async(objectJSON, errorMessage) => {
+      const response = await request(app).post('/object/').send(objectJSON);
+      
+      expect(response.status).toBe(404);
+      expect(response.body.error).toBe(errorMessage);
+      
       return response;
     }
   })
@@ -91,19 +99,30 @@ describe('Route POST /object/ with JSON body', () => {
     await mongoose.disconnect();
   });
   test('POST request: a key-value pair JSON is sent and stored', async() => {
-    const response = await postReqAndCheck("key", "1");
+    const objectJSON = {key: "1"}
+    const response = await postReqAndCheckCorrect(objectJSON);
     const objectRes = await ObjectModel.findOne({key: "key"});
     expect(objectRes.value).toBe("1");
     expect(objectRes.timestamp.getTime()).toBe(response.body.timestamp);
   });
   test('POST request: 2 key-value pairs JSON are sent and stored by 2 POST request', async() => {
-    const response1 = await postReqAndCheck("key", "1");
-    const response2 = await postReqAndCheck("key", "2");
+    const objectJSON1 = {key: "1"}
+    const objectJSON2 = {key: "2"}
+    const response1 = await postReqAndCheckCorrect(objectJSON1);
+    const response2 = await postReqAndCheckCorrect(objectJSON2);
     
     const objectRes = await ObjectModel.find({key: 'key'}).sort({timestamp: -1});
     expect(objectRes[0].value).toBe('2');
     expect(objectRes[0].timestamp.getTime()).toBe(response2.body.timestamp);
     expect(objectRes[1].value).toBe('1');
     expect(objectRes[1].timestamp.getTime()).toBe(response1.body.timestamp);
+  });
+  test('POST request: empty body should return error', async() => {
+    const objectJSON = null;
+    const response1 = await postReqAndCheckError(objectJSON, "Body must contain JSON!");
+  });
+  test('POST request: empty JSON should return error', async() => {
+    const objectJSON = {};
+    const response1 = await postReqAndCheckError(objectJSON, "Body must contain JSON!");
   });
 });
