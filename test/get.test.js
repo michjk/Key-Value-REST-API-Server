@@ -73,6 +73,7 @@ describe('Route POST /object/ with JSON body', () => {
   beforeAll(() => {
     postReqAndCheckCorrect = async(objectJSON) => {
       const response = await request(app).post('/object/').send(objectJSON);
+      const [key, value] = Object.entries(objectJSON)[0];
       
       expect(response.status).toBe(200);
       expect(response.body.key).toBe(key);
@@ -118,11 +119,11 @@ describe('Route POST /object/ with JSON body', () => {
     expect(objectRes[1].timestamp.getTime()).toBe(response1.body.timestamp);
   });
   test('POST request: empty body should return error', async() => {
-    const objectJSON = null;
-    const response1 = await postReqAndCheckError(objectJSON, "Body must contain JSON!");
+    await postReqAndCheckError(null, "Body must contain JSON!");
+    await postReqAndCheckError({}, "Body must contain JSON!");
   });
-  test('POST request: empty JSON should return error', async() => {
-    const objectJSON = {};
-    const response1 = await postReqAndCheckError(objectJSON, "Body must contain JSON!");
+  test('POST request: empty value should return error', async() => {
+    const objectJSON = {key: ''};
+    const response = await postReqAndCheckError(objectJSON, "Body must contain JSON!");
   });
 });
