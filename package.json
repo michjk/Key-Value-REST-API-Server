@@ -19,8 +19,8 @@
   },
   "scripts": {
     "start": "node server.js",
-    "test": "jest",
-    "devserver": "./node_modules/nodemon/bin/nodemon.js server.js"
+    "test": "jest --runInBand",
+    "devserver": "nodemon server.js"
   },
   "engines": {
     "node": "8.x",
