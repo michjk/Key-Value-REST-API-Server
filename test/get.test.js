@@ -69,7 +69,7 @@ describe('Route GET /object/:key', () => {
 describe('Route POST /object/ with JSON body', () => {
   beforeEach(async() => {
     await mongoose.connect(process.env.MONGODB_URI);
-    ObjectModel.remove({});
+    await ObjectModel.remove({});
   });
   afterEach(async() => {
     await mongoose.disconnect();
