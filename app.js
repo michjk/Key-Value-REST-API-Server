@@ -6,7 +6,7 @@ const objectRouter = require('./routers/objectRouter');
 const app = express();
 
 console.log(process.env.NODE_ENV);
-if (process.env.NODE_ENV == "production")
+if (process.env.NODE_ENV === "production") {
     const librato = require('librato-node');
     librato.configure({email: process.env.LIBRATO_USER, token: process.env.LIBRATO_TOKEN});
     app.use(librato.middleware());
@@ -19,6 +19,7 @@ if (process.env.NODE_ENV == "production")
     librato.on('error', (err) => {
         console.error(err);
     });
+}
 
 app.use(bodyParser.json());
 app.use('/object', objectRouter);
