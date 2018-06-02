@@ -1,6 +1,6 @@
 const request = require('supertest');
 
-const mongoose = require('../mongoose');
+const mongoose = require('../db/mongoose');
 const app = require('../app');
 const ObjectModel = require('../models/object');
 

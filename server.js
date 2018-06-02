@@ -1,7 +1,7 @@
 const logger = require('winston');
 
 //initialize connection to mongodb
-const mongoose = require('./mongoose');
+const mongoose = require('./db/mongoose');
 mongoose.connect(process.env.MONGODB_URI);
 
 const app = require('./app');
