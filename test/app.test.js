@@ -7,6 +7,7 @@ const ObjectModel = require('../models/object');
 describe('Route GET /object/:key', () => {
   let objectList = []
   beforeAll(async()=> {
+    // populate information on database
     await mongoose.connect(process.env.MONGODB_URI);
     
     await ObjectModel.remove({});
@@ -24,42 +25,42 @@ describe('Route GET /object/:key', () => {
   afterEach(async() => {
     await mongoose.disconnect();
   });
-  test('GET request: accept a key and return the latest value', async() => {
+  test('GET request: send key and return the latest value', async() => {
     const response = await request(app).get('/object/key');
     expect(response.status).toBe(200);
     expect(response.body.value).toBe(objectList[3].value);
   });
-  test('GET request: accept a key2 and return the latest value', async() => {
+  test('GET request: send key2 and return the latest value', async() => {
     const response = await request(app).get('/object/key2');
     expect(response.status).toBe(200);
     expect(response.body.value).toBe(objectList[4].value);
   });
-  test('GET request: accept a key & timestamp and return the third value', async() => {
+  test('GET request: send key & timestamp and return the third value', async() => {
     const response = await request(app).get(`/object/key?timestamp=${objectList[2].timestamp.getTime()}`);
     expect(response.status).toBe(200);
     expect(response.body.value).toBe(objectList[2].value);
   });
-  test('GET request: accept a key & timestamp and return the second value', async() => {
+  test('GET request: send key & timestamp and return the second value', async() => {
     const response = await request(app).get(`/object/key?timestamp=${objectList[2].timestamp.getTime()-1}`);
     expect(response.status).toBe(200);
     expect(response.body.value).toBe(objectList[1].value);
   });
-  test('GET request: accept a key & timestamp before first value and return error', async() => {
+  test('GET request: send key & timestamp before first value and return error', async() => {
     const response = await request(app).get('/object/key?timestamp=1000');
     expect(response.status).toBe(404);
     expect(response.body.error).toBe("Value of key is not found!");
   });
-  test('GET request: accept an unknown key and return error', async() => {
+  test('GET request: send unknown key and return error', async() => {
     const response = await request(app).get('/object/key3');
     expect(response.status).toBe(404);
     expect(response.body.error).toBe("Value of key3 is not found!");
   });
-  test('GET request: accept a key & empty timestamp format and return error', async() => {
+  test('GET request: send key & empty timestamp format and return error', async() => {
     const response = await request(app).get('/object/key?timestamp=');
     expect(response.status).toBe(404);
     expect(response.body.error).toBe('Incorrect timestamp value!');
   });
-  test('GET request: accept an unknown key and return error', async() => {
+  test('GET request: send unknown key and return error', async() => {
     const response = await request(app).get(`/object/key?timestamp=sadasd`);
     expect(response.status).toBe(404);
     expect(response.body.error).toBe('Incorrect timestamp value!');
@@ -82,6 +83,7 @@ describe('Route POST /object/ with JSON body', () => {
 
   beforeAll(() => {
     postReqAndCheckCorrect = async(objectJSON) => {
+      //check if POST request success
       const response = await request(app).post('/object/').send(objectJSON);
       const [key, value] = Object.entries(objectJSON)[0];
       
@@ -94,6 +96,7 @@ describe('Route POST /object/ with JSON body', () => {
     }
 
     postReqAndCheckError = async(objectJSON, errorMessage) => {
+      //check if POST request generate desirable error
       const response = await request(app).post('/object/').send(objectJSON);
       
       expect(response.status).toBe(404);
@@ -112,6 +115,8 @@ describe('Route POST /object/ with JSON body', () => {
   test('POST request: a key-value pair JSON is sent and stored', async() => {
     const objectJSON = {key: "1"}
     const response = await postReqAndCheckCorrect(objectJSON);
+
+    // check data existence
     const objectRes = await ObjectModel.findOne({key: "key"});
     expect(objectRes.value).toBe("1");
     expect(objectRes.timestamp.getTime()).toBe(response.body.timestamp);
@@ -122,6 +127,7 @@ describe('Route POST /object/ with JSON body', () => {
     const response1 = await postReqAndCheckCorrect(objectJSON1);
     const response2 = await postReqAndCheckCorrect(objectJSON2);
     
+    // check data existance
     const objectRes = await ObjectModel.find({key: 'key'}).sort({timestamp: -1});
     expect(objectRes[0].value).toBe('2');
     expect(objectRes[0].timestamp.getTime()).toBe(response2.body.timestamp);

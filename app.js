@@ -6,9 +6,9 @@ const objectRouter = require('./routers/objectRouter');
 
 const app = express();
 
-app.use(bodyParser.json());
-app.use('/object', objectRouter);
-app.use((err, req, res, next) => {
+app.use(bodyParser.json());// accept body json format
+app.use('/object', objectRouter);// set up router information
+app.use((err, req, res, next) => { // callback on error
     logger.error(err);
     res.status(404).json({'error': err.message});
 });

@@ -4,6 +4,7 @@ const promise = require('bluebird');
 
 mongoose.Promise = promise;
 
+//event callback
 mongoose.connection.on('error', err => {
     logger.error(err.message);
 });
