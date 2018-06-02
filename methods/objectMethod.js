@@ -12,8 +12,10 @@ const getObject = async(req, res, next) => {
         return next(new Error('Query parameter should not more than 1!'));
     }
     
-    if (!util.checkIfObjectContainOnlyASpecificProperty(req.query, 'timestamp')) {
-        return next(new Error('timestamp should be the only query parameter!'));
+    if (util.checkIfAPropertyExist(req.query)) {
+        if (!util.checkIfObjectContainOnlyASpecificProperty(req.query, 'timestamp')) {
+            return next(new Error('timestamp should be the only query parameter!'));
+        }
     }
 
     let timestamp = req.query.timestamp;

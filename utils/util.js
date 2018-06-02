@@ -3,6 +3,11 @@ const checkIfMultiplePropertiesExist  = (object) => {
     return objectEntries.length > 1;
 }
 
+const checkIfAPropertyExist = (object) => {
+    const objectEntries = Object.entries(object);
+    return objectEntries.length == 1;
+}
+
 const checkIfObjectContainOnlyASpecificProperty = (object, propertieName) => {
     const objectEntries = Object.entries(object);
     return objectEntries.length == 1 && objectEntries[0][0] === propertieName;
@@ -20,6 +25,7 @@ const checkIfObjectIsEmpty = (object) => {
 
 module.exports = {
     checkIfMultiplePropertiesExist,
+    checkIfAPropertyExist,
     checkIfObjectContainOnlyASpecificProperty,
     checkIfAPropertyIsANumber,
     checkIfObjectIsEmpty
