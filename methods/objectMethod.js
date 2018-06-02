@@ -1,22 +1,25 @@
+const logger = require('winston');
 const ObjectModel = require('../models/object');
-const _ = require('lodash');
+const util = require('../utils/util');
+_ = require('lodash');
 
 const getObject = async(req, res, next) => {
-    let objectEntries = Object.entries(req.query);
-    if (objectEntries.length > 1) {
+    logger.info('getObject');
+    logger.info(req.params.key);
+    logger.info(req.params.query);
+
+    if (util.checkIfMultiplePropertiesExist(req.query)) {
         return next(new Error('Query parameter should not more than 1!'));
     }
     
-    if (objectEntries.length == 1 && objectEntries[0][0] !== 'timestamp') {
+    if (!util.checkIfObjectContainOnlyASpecificProperty(req.query, 'timestamp')) {
         return next(new Error('timestamp should be the only query parameter!'));
     }
 
-    let timestamp = null;
+    let timestamp = req.query.timestamp;
     
-    if ( _.has(req.query, 'timestamp')) {
-        timestamp = req.query.timestamp;
-        if (!timestamp || isNaN(timestamp))
-            return next(new Error('Incorrect timestamp value!'))
+    if (!util.checkIfAPropertyIsANumber(timestamp)) {
+        return next(new Error('Incorrect timestamp value!'));
     }
 
     try {
@@ -37,12 +40,13 @@ const getObject = async(req, res, next) => {
 }
 
 const addObject = async(req, res, next) => {
-    console.log(req.body);
-    if (!req.body || Object.keys(req.body).length == 0) {
+    logger.info('addObject');
+    logger.info(req.body);
+    if (util.checkIfObjectIsEmpty(req.body)) {
         return next(new Error("Body must contain JSON!"));
     }
 
-    if (Object.keys(req.body).length > 1) {
+    if (util.checkIfMultiplePropertiesExist(req.body)) {
         return next(new Error("Data must contains only one key-value pair!"));
     }
 
