@@ -15,7 +15,7 @@ const checkIfAPropertyIsANumber = (x) => {
 }
 
 const checkIfObjectIsEmpty = (object) => {
-    return !req.body || Object.keys(req.body).length == 0;
+    return !object || Object.keys(object).length == 0;
 }
 
 module.exports = {
