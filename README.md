@@ -30,5 +30,15 @@ yarn test # or npm test
 ```
 The testing implementation is under tests directory.
 
-## Infrastructure Specification
+## Deployment Specification
 The NodeJS application run in Heroku cloud service that provide easy way to deploy and manage application. To encourage good practice in deployment, Heroku is integrated with my Github repository and Travis CI for running test. The workflow of deployment is shown in this picture.
+![screenshot from 2018-06-04 00-17-55](https://user-images.githubusercontent.com/11803421/40888671-334b2352-678d-11e8-8862-b9770588c6d9.png)
+*Image from Travis CI homepage*
+
+## Logging
+Since it is not recommended to SSH connect to application instance for retrieving logs, I use PaperTrail as heroku add-ons for streaming log message to webapp based GUI.
+![screenshot from 2018-06-04 00-45-53](https://user-images.githubusercontent.com/11803421/40888899-a9c6d492-6790-11e8-8bc8-ba2e4323ca43.png)
+
+## Metrics Monitoring
+To monitor number of request coming and other metrics, Librato is used as cloud service for streaming metrics from application to webapp based GUI.
+![screenshot from 2018-06-04 00-53-26](https://user-images.githubusercontent.com/11803421/40888960-bca26904-6791-11e8-98f2-60da88999a66.png)
